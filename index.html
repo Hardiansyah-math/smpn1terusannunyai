@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:," />
     <title>SMP Negeri 1 Terusan Nunyai — Website Resmi Sekolah</title>
-    <meta name="description" content="Website resmi SMP Negeri 1 Terusan Nunyai, Lampung Tengah: profil sekolah, visi dan misi, akademik, guru dan wali kelas, serta layanan digital CBT dan E-Rapor." />
+    <meta name="description" content="Website resmi SMP Negeri 1 Terusan Nunyai, Lampung Tengah: profil sekolah, visi dan misi, akademik, guru dan wali kelas, serta layanan digital CBT, E-Rapor, dan LMS untuk belajar daring." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -222,7 +222,7 @@
       .misi-list p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
 
       /* Layanan digital */
-      .layanan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+      .layanan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
       @media (max-width: 1020px) { .layanan-grid { grid-template-columns: repeat(2, 1fr); } }
       @media (max-width: 560px) { .layanan-grid { grid-template-columns: 1fr; } }
       .layanan {
@@ -241,6 +241,79 @@
         display: inline-flex; align-items: center; gap: 6px;
       }
       .layanan a.go:hover { text-decoration: underline; }
+
+      /* LMS — ruang belajar daring */
+      .lms-panel {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+        box-shadow: var(--shadow); padding: 28px;
+      }
+      @media (max-width: 560px) { .lms-panel { padding: 20px; } }
+      .lms-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+      @media (max-width: 720px) { .lms-steps { grid-template-columns: 1fr; } }
+      .lms-step {
+        display: flex; gap: 14px; align-items: flex-start;
+        background: var(--surface-2); border-radius: 12px; padding: 16px 18px;
+      }
+      .lms-step .num {
+        flex: none; width: 34px; height: 34px; border-radius: 50%;
+        background: var(--navy-deep); color: var(--bg);
+        display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem;
+      }
+      @media (prefers-color-scheme: dark) { .lms-step .num { color: #0c1420; } }
+      .lms-step b { display: block; font-size: 0.98rem; margin-bottom: 2px; }
+      .lms-step span { color: var(--ink-soft); font-size: 0.88rem; line-height: 1.5; display: block; }
+      .lms-label { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+      .lms-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+      .lms-tab {
+        font: inherit; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+        padding: 10px 20px; border-radius: 999px;
+        border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-soft);
+      }
+      .lms-tab:hover { border-color: var(--navy); color: var(--ink); }
+      .lms-tab.active { background: var(--navy-deep); border-color: var(--navy-deep); color: var(--bg); }
+      .lms-layout { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 24px; align-items: start; }
+      @media (max-width: 860px) { .lms-layout { grid-template-columns: 1fr; } }
+      .lms-mapel-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+      .lms-mapel-btn {
+        width: 100%; font: inherit; text-align: left; cursor: pointer;
+        display: flex; align-items: center; gap: 10px;
+        background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px;
+        padding: 11px 14px; color: var(--ink); font-weight: 700; font-size: 0.94rem; line-height: 1.35;
+      }
+      .lms-mapel-btn:hover { border-color: var(--navy); }
+      .lms-mapel-btn.active { border-color: var(--navy-deep); background: var(--chip-bg); }
+      .lms-mapel-btn .st { margin-left: auto; flex: none; font-size: 0.76rem; font-weight: 800; color: var(--muted); white-space: nowrap; }
+      .lms-mapel-btn .st.ada { color: var(--chip-ink); }
+      .lms-detail {
+        border: 1px solid var(--line); border-radius: 14px; padding: 22px; background: var(--surface);
+      }
+      .lms-detail h3 { margin: 0 0 2px; font-size: 1.15rem; font-weight: 800; }
+      .lms-detail .ket { color: var(--muted); font-size: 0.86rem; font-weight: 600; margin-bottom: 16px; }
+      .lms-progress { margin-bottom: 18px; }
+      .lms-progress .bar { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+      .lms-progress .fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s ease; }
+      @media (prefers-reduced-motion: reduce) { .lms-progress .fill { transition: none; } }
+      .lms-progress p { margin: 8px 0 0; font-size: 0.88rem; color: var(--ink-soft); font-weight: 600; }
+      .lms-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+      .lms-item {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+        background: var(--surface-2); border-radius: 10px; padding: 12px 14px;
+      }
+      .lms-item .judul { font-weight: 700; font-size: 0.95rem; line-height: 1.35; flex: 1 1 140px; }
+      .lms-item a.buka {
+        font-weight: 800; font-size: 0.88rem; text-decoration: none; white-space: nowrap;
+        background: var(--navy-deep); color: var(--bg); border-radius: 8px; padding: 8px 14px;
+      }
+      @media (prefers-color-scheme: dark) { .lms-item a.buka { color: #0c1420; } }
+      .lms-item a.buka:hover { text-decoration: underline; }
+      .lms-done-btn {
+        font: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
+        border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-soft);
+        border-radius: 8px; padding: 7px 12px;
+      }
+      .lms-done-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+      .lms-kosong { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+      .lms-kosong b { color: var(--ink); }
 
       /* Akademik */
       .mapel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -364,6 +437,7 @@
           <a href="#profil">Profil</a>
           <a href="#visi-misi">Visi &amp; Misi</a>
           <a href="#layanan">Layanan Digital</a>
+          <a href="#lms">LMS</a>
           <a href="#akademik">Akademik</a>
           <a href="#materi">Materi</a>
           <a href="#guru">Guru &amp; Wali Kelas</a>
@@ -384,6 +458,7 @@
           </p>
           <div class="hero-cta">
             <a class="btn btn-gold" href="https://cbt-spensateruna.web.id" target="_blank" rel="noopener">Masuk CBT Ujian</a>
+            <a class="btn btn-ghost" href="#lms">Belajar di LMS</a>
             <a class="btn btn-ghost" href="https://cbt-spensateruna.web.id/erapor/" target="_blank" rel="noopener">Buka E-Rapor</a>
           </div>
         </div>
@@ -418,8 +493,8 @@
             </blockquote>
             <p>
               Melalui halaman ini, warga sekolah dapat mengakses profil dan program sekolah, mengikuti
-              pengumuman terbaru, serta menggunakan layanan digital kami — ujian berbasis komputer (CBT)
-              dan e-rapor — dari mana saja. Semoga layanan ini memudahkan dan membawa manfaat bagi
+              pengumuman terbaru, serta menggunakan layanan digital kami — ujian berbasis komputer (CBT),
+              e-rapor, dan ruang belajar daring (LMS) — dari mana saja. Semoga layanan ini memudahkan dan membawa manfaat bagi
               kemajuan pendidikan anak-anak kita.
             </p>
             <div class="ttd">
@@ -564,12 +639,60 @@
           </article>
           <article class="layanan">
             <div class="ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M10 8.2v4.6l4.2-2.3z" fill="currentColor" stroke="none"/><path d="M8.5 20.5h7M12 17v3.5"/></svg>
+            </div>
+            <h3>LMS — Belajar Daring</h3>
+            <p>Ruang belajar daring untuk peserta didik: pilih jenjang kelas dan mata pelajaran, lalu pelajari materi dan latihan interaktif dari rumah — tanpa perlu login.</p>
+            <a class="go" href="#lms">Masuk LMS <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="layanan">
+            <div class="ic" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5"/><path d="M20 18H6.5"/></svg>
             </div>
             <h3>Materi &amp; Bahan Ajar Interaktif</h3>
             <p>Katalog materi dan bahan ajar interaktif untuk 12 mata pelajaran di kelas VII, VIII, dan IX — video, permainan, dan latihan yang bisa dibuka kapan saja.</p>
             <a class="go" href="#materi">Jelajahi Materi <span aria-hidden="true">→</span></a>
           </article>
+        </div>
+      </section>
+
+      <!-- ================= LMS — BELAJAR DARING ================= -->
+      <section id="lms">
+        <div class="sec-head">
+          <div class="rule"></div>
+          <h2>LMS — Ruang Belajar Daring</h2>
+          <p>Portal belajar untuk peserta didik SMP Negeri 1 Terusan Nunyai. Tidak perlu akun atau login: cukup pilih jenjang kelas dan mata pelajaran, lalu mulai belajar dari materi dan latihan yang tersedia.</p>
+        </div>
+        <div class="lms-panel">
+          <div class="lms-steps">
+            <div class="lms-step">
+              <span class="num">1</span>
+              <div><b>Pilih jenjang kelas</b><span>Kelas VII, VIII, atau IX — sesuaikan dengan kelasmu sekarang.</span></div>
+            </div>
+            <div class="lms-step">
+              <span class="num">2</span>
+              <div><b>Pilih mata pelajaran</b><span>Daftar 12 mata pelajaran akan tampil untuk jenjang yang dipilih.</span></div>
+            </div>
+            <div class="lms-step">
+              <span class="num">3</span>
+              <div><b>Buka materi &amp; latihan</b><span>Pelajari materinya, kerjakan latihannya, lalu tandai yang sudah selesai kamu pelajari.</span></div>
+            </div>
+          </div>
+
+          <p class="lms-label" id="lmsJenjangLabel">Jenjang kelas</p>
+          <div class="lms-tabs" role="tablist" aria-labelledby="lmsJenjangLabel">
+            <button class="lms-tab" type="button" role="tab" data-kelas="VII" aria-selected="false">Kelas VII</button>
+            <button class="lms-tab active" type="button" role="tab" data-kelas="VIII" aria-selected="true">Kelas VIII</button>
+            <button class="lms-tab" type="button" role="tab" data-kelas="IX" aria-selected="false">Kelas IX</button>
+          </div>
+
+          <div class="lms-layout">
+            <div>
+              <p class="lms-label">Mata pelajaran</p>
+              <ul class="lms-mapel-list" id="lmsMapelList"></ul>
+            </div>
+            <div class="lms-detail" id="lmsDetail" aria-live="polite"></div>
+          </div>
         </div>
       </section>
 
@@ -707,8 +830,8 @@
           <article class="pengumuman">
             <div class="tgl"><b>Belajar</b><span>Daring</span></div>
             <div>
-              <h3>Materi dan Permainan Matematika Kelas 8</h3>
-              <p>Peserta didik kelas 8 dapat berlatih kapan saja lewat bagian Materi &amp; Bahan Ajar Interaktif di halaman ini: video Teorema Pythagoras, permainan Pola Bilangan, serta materi Relasi dan Fungsi dan Persamaan Garis Lurus.</p>
+              <h3>Belajar Daring lewat LMS dan Materi Matematika Kelas 8</h3>
+              <p>Peserta didik dapat belajar dari rumah lewat LMS di halaman ini — pilih jenjang kelas dan mata pelajaran untuk membuka materi yang tersedia. Untuk kelas 8 saat ini tersedia: video Teorema Pythagoras, permainan Pola Bilangan, serta materi Relasi dan Fungsi dan Persamaan Garis Lurus.</p>
             </div>
           </article>
         </div>
@@ -735,6 +858,7 @@
             <ul>
               <li><a href="https://cbt-spensateruna.web.id" target="_blank" rel="noopener">CBT Spensateruna</a></li>
               <li><a href="https://cbt-spensateruna.web.id/erapor/" target="_blank" rel="noopener">E-Rapor</a></li>
+              <li><a href="#lms">LMS — Belajar Daring</a></li>
               <li><a href="#layanan">INFO SPMB</a></li>
               <li><a href="#materi">Materi &amp; Bahan Ajar Interaktif</a></li>
             </ul>
@@ -886,6 +1010,181 @@
             toggle.setAttribute('aria-expanded', 'false');
           }
         });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        /* ---------- LMS — ruang belajar daring (tanpa login) ---------- */
+        var LMS_MAPEL = [
+          { nama: 'PAI dan Budi Pekerti', ket: 'Pendidikan Agama Islam' },
+          { nama: 'Pendidikan Pancasila', ket: 'Kewargaan' },
+          { nama: 'Bahasa Indonesia', ket: 'Literasi' },
+          { nama: 'Matematika', ket: 'Numerasi' },
+          { nama: 'IPA', ket: 'Ilmu Pengetahuan Alam' },
+          { nama: 'IPS', ket: 'Ilmu Pengetahuan Sosial' },
+          { nama: 'Bahasa Inggris', ket: 'Bahasa Asing' },
+          { nama: 'Informatika', ket: 'Teknologi Informasi' },
+          { nama: 'Seni Budaya', ket: 'Kesenian' },
+          { nama: 'PJOK', ket: 'Olahraga & Kesehatan' },
+          { nama: 'Bahasa Lampung', ket: 'Muatan Lokal' },
+          { nama: 'Pendidikan Anti Korupsi', ket: 'Karakter' }
+        ];
+        var LMS_MATERI = {
+          'VIII': {
+            'Matematika': [
+              { judul: 'Relasi dan Fungsi', jenis: 'Web Interaktif', url: 'https://hardiansyah-math.github.io/relasi-dan-fungsi/' },
+              { judul: 'Persamaan Garis Lurus', jenis: 'Web + Video', url: 'https://hardiansyah-math.github.io/PGL/' },
+              { judul: 'Teorema Pythagoras', jenis: 'Video', url: 'https://bujang-alap-web.my.id/video-pythagoras/' },
+              { judul: 'Pola Bilangan', jenis: 'Game Interaktif', url: 'https://bujang-alap-web.my.id/pola-bilangan/' }
+            ]
+          }
+        };
+        var kelasAktif = 'VIII';
+        var mapelAktif = 'Matematika';
+        var selesai = {}; /* progres tandai-selesai selama sesi halaman ini terbuka */
+        var listEl = document.getElementById('lmsMapelList');
+        var detailEl = document.getElementById('lmsDetail');
+        var tabs = document.querySelectorAll('.lms-tab');
+        if (!listEl || !detailEl) return;
+
+        function materiUntuk(kelas, mapel) {
+          var per = LMS_MATERI[kelas] || {};
+          return per[mapel] || [];
+        }
+        function kunci(kelas, mapel, judul) { return kelas + '|' + mapel + '|' + judul; }
+
+        function renderMapelList() {
+          listEl.innerHTML = '';
+          LMS_MAPEL.forEach(function (m) {
+            var items = materiUntuk(kelasAktif, m.nama);
+            var li = document.createElement('li');
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'lms-mapel-btn' + (m.nama === mapelAktif ? ' active' : '');
+            btn.setAttribute('aria-pressed', m.nama === mapelAktif ? 'true' : 'false');
+            var nama = document.createElement('span');
+            nama.textContent = m.nama;
+            var st = document.createElement('span');
+            st.className = 'st' + (items.length ? ' ada' : '');
+            st.textContent = items.length ? items.length + ' materi' : 'Segera hadir';
+            btn.appendChild(nama);
+            btn.appendChild(st);
+            btn.addEventListener('click', function () {
+              mapelAktif = m.nama;
+              renderMapelList();
+              renderDetail();
+            });
+            li.appendChild(btn);
+            listEl.appendChild(li);
+          });
+        }
+
+        function renderDetail() {
+          var meta = null;
+          LMS_MAPEL.forEach(function (m) { if (m.nama === mapelAktif) meta = m; });
+          var items = materiUntuk(kelasAktif, mapelAktif);
+          detailEl.innerHTML = '';
+          var h = document.createElement('h3');
+          h.textContent = mapelAktif;
+          var ket = document.createElement('div');
+          ket.className = 'ket';
+          ket.textContent = (meta ? meta.ket + ' · ' : '') + 'Kelas ' + kelasAktif + ' · LMS Spensateruna';
+          detailEl.appendChild(h);
+          detailEl.appendChild(ket);
+
+          if (!items.length) {
+            var kosong = document.createElement('p');
+            kosong.className = 'lms-kosong';
+            kosong.innerHTML = '';
+            var b = document.createElement('b');
+            b.textContent = 'Segera hadir. ';
+            kosong.appendChild(b);
+            kosong.appendChild(document.createTextNode(
+              'Materi dan latihan ' + mapelAktif + ' untuk kelas ' + kelasAktif +
+              ' sedang disiapkan oleh guru pengampu. Silakan pilih mata pelajaran lain yang materinya sudah tersedia, atau kembali lagi nanti.'
+            ));
+            detailEl.appendChild(kosong);
+            return;
+          }
+
+          var doneCount = 0;
+          items.forEach(function (it) { if (selesai[kunci(kelasAktif, mapelAktif, it.judul)]) doneCount++; });
+          var prog = document.createElement('div');
+          prog.className = 'lms-progress';
+          var bar = document.createElement('div');
+          bar.className = 'bar';
+          bar.setAttribute('role', 'progressbar');
+          bar.setAttribute('aria-valuemin', '0');
+          bar.setAttribute('aria-valuemax', String(items.length));
+          bar.setAttribute('aria-valuenow', String(doneCount));
+          bar.setAttribute('aria-label', 'Progres belajar ' + mapelAktif + ' kelas ' + kelasAktif);
+          var fill = document.createElement('div');
+          fill.className = 'fill';
+          fill.style.width = (items.length ? Math.round(doneCount / items.length * 100) : 0) + '%';
+          bar.appendChild(fill);
+          var ptext = document.createElement('p');
+          ptext.textContent = doneCount + ' dari ' + items.length + ' materi sudah ditandai selesai.';
+          prog.appendChild(bar);
+          prog.appendChild(ptext);
+          detailEl.appendChild(prog);
+
+          var ul = document.createElement('ul');
+          ul.className = 'lms-items';
+          items.forEach(function (it) {
+            var k = kunci(kelasAktif, mapelAktif, it.judul);
+            var li = document.createElement('li');
+            li.className = 'lms-item';
+            var jenis = document.createElement('span');
+            jenis.className = 'jenis';
+            jenis.textContent = it.jenis;
+            var judul = document.createElement('span');
+            judul.className = 'judul';
+            judul.textContent = it.judul;
+            var buka = document.createElement('a');
+            buka.className = 'buka';
+            buka.href = it.url;
+            buka.target = '_blank';
+            buka.rel = 'noopener';
+            buka.textContent = 'Buka Materi';
+            var doneBtn = document.createElement('button');
+            doneBtn.type = 'button';
+            doneBtn.className = 'lms-done-btn';
+            var isDone = !!selesai[k];
+            doneBtn.setAttribute('aria-pressed', isDone ? 'true' : 'false');
+            doneBtn.textContent = isDone ? '✓ Sudah dipelajari' : 'Tandai selesai';
+            doneBtn.addEventListener('click', function () {
+              selesai[k] = !selesai[k];
+              renderDetail();
+            });
+            li.appendChild(jenis);
+            li.appendChild(judul);
+            li.appendChild(buka);
+            li.appendChild(doneBtn);
+            ul.appendChild(li);
+          });
+          detailEl.appendChild(ul);
+        }
+
+        tabs.forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            tabs.forEach(function (t) {
+              t.classList.remove('active');
+              t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            kelasAktif = tab.getAttribute('data-kelas');
+            /* Pertahankan mapel terpilih; bila mapel itu belum punya materi di
+               jenjang baru dan ada mapel lain yang terisi, tetap di mapel yang sama
+               agar siswa melihat status "Segera hadir"-nya dengan jelas. */
+            renderMapelList();
+            renderDetail();
+          });
+        });
+
+        renderMapelList();
+        renderDetail();
       })();
     </script>
   </body>
