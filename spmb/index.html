@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPMB SMP Negeri 1 Terusan Nunyai</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--tx:#14213d;--mu:#5b6b84;--pr:#1d4ed8;--prt:#fff;--bd:#dbe3ee;--ok:#15803d;--no:#b91c1c;--wa:#b45309;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--tx:#e8eefc;--mu:#9fb0cc;--pr:#60a5fa;--prt:#0b1220;--bd:#334155;--ok:#4ade80;--no:#f87171;--wa:#fbbf24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--tx:#e8eefc;--mu:#9fb0cc;--pr:#60a5fa;--prt:#0b1220;--bd:#334155;--ok:#4ade80;--no:#f87171;--wa:#fbbf24;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--pr);color:var(--prt);padding:20px 16px;text-align:center}
+header h1{margin:0;font-size:1.25rem}header p{margin:4px 0 0;opacity:.9;font-size:.9rem}
+nav{display:flex;gap:4px;overflow-x:auto;padding:8px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+nav button{flex:1;white-space:nowrap;border:0;background:none;color:var(--mu);padding:10px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on{background:var(--pr);color:var(--prt)}
+main{max-width:860px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 8px;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.jalur b{color:var(--pr)}
+label{display:block;font-weight:600;font-size:.88rem;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.btn{border:0;background:var(--pr);color:var(--prt);padding:12px 18px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;margin-top:16px}
+.btn.s{padding:6px 10px;margin:0;font-size:.8rem}.btn.o{background:none;border:1px solid var(--bd);color:var(--tx)}
+.btn:disabled{opacity:.5}
+.msg{padding:12px;border-radius:8px;margin-top:12px;background:var(--bg);border:1px solid var(--bd)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid currentColor}
+.Menunggu{color:var(--wa)}.Terverifikasi{color:var(--pr)}.Diterima{color:var(--ok)}.Ditolak{color:var(--no)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;text-align:center}.stat b{font-size:1.4rem;display:block}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--bd);vertical-align:top}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.bar>*{flex:1;min-width:140px}
+.mu{color:var(--mu);font-size:.85rem}
+tr.in{background:color-mix(in srgb,var(--ok) 14%,transparent)}
+@media print{header,nav,.btn,form{display:none!important}}
+</style>
+</head>
+<body>
+<header><h1>Penerimaan Siswa Baru (SPMB)</h1><p>SMP Negeri 1 Terusan Nunyai · Tahun Ajaran 2027/2028</p></header>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer id="ft" class="mu" style="text-align:center;padding:16px"></footer>
+<script>
+const JALUR={Domisili:'Berdasarkan jarak tempat tinggal ke sekolah.',Afirmasi:'Untuk calon siswa dari keluarga kurang mampu dan penyandang disabilitas.',Mutasi:'Untuk anak yang orang tuanya dipindahtugaskan, atau anak guru di sekolah ini.',Prestasi:'Berdasarkan nilai rapor atau prestasi akademik dan non-akademik.'};
+const STATUS=['Menunggu','Terverifikasi','Diterima','Ditolak'];
+let jadwal={},kuota={},hs={},db=null,isAdmin=false,tab='beranda',list=[],unsub=null,q='',fs='';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const CFG={apiKey:"AIzaSyD2b750KLuDxYtpGc1JYk5N1I174O_IUlg",authDomain:"spmb-smpn1-terusan-nunyai.firebaseapp.com",projectId:"spmb-smpn1-terusan-nunyai",storageBucket:"spmb-smpn1-terusan-nunyai.firebasestorage.app",messagingSenderId:"664112748721",appId:"1:664112748721:web:8446ecb811ce3eeba02a90"};
+function init(){
+  render();
+  try{
+    firebase.initializeApp(CFG);db=firebase.firestore();pub();
+    firebase.auth().onAuthStateChanged(u=>{
+      const was=isAdmin;isAdmin=!!u;
+      if(was&&!isAdmin)return location.reload();
+      if(isAdmin)listen();
+      render();
+    });
+  }catch(e){console.error(e)}
+}
+async function setStatus(x,st){const b=db.batch(),dr=db.collection('diterima').doc(x.id);b.set(db.collection('hasil').doc(x.id),{nama:x.nama,jalur:x.jalur,no:x.no,status:st});if(st==='Diterima')b.set(dr,{nama:x.nama,jalur:x.jalur,no:x.no});else b.delete(dr);await b.commit()}
+function renderLogin(){
+  $('#app').innerHTML=`<div class="card"><h2>Masuk Admin</h2><label>Email</label><input id="em" type="email" autocomplete="username"><label>Kata sandi</label><input id="pw" type="password" autocomplete="current-password"><button class="btn" id="lg2">Masuk</button><div id="hasil"></div></div>`;
+  $('#lg2').onclick=async()=>{try{await firebase.auth().signInWithEmailAndPassword($('#em').value.trim(),$('#pw').value);tab='admin';render()}catch(e){$('#hasil').innerHTML='<div class="msg">Email atau kata sandi salah.</div>'}};
+}
+const tgl=s=>s?new Date(s+'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-';
+function terbuka(){const t=new Date().toLocaleDateString('en-CA');return !(jadwal.buka&&t<jadwal.buka)&&!(jadwal.tutup&&t>jadwal.tutup)}
+function pub(){try{db.collection('config').doc('jadwal').onSnapshot(s=>{jadwal=s.exists?s.data():{};if(tab==='beranda')renderHome();if(tab==='umum')renderUmum()})}catch(e){console.error(e)}}
+function listen(){
+  if(unsub)return;
+  try{db.collection('config').doc('kuota').onSnapshot(s=>{kuota=s.exists?s.data():{};if(tab==='rank')renderRank()})}catch(e){console.error(e)}
+  try{db.collection('hasil').onSnapshot(s=>{hs={};s.docs.forEach(d=>hs[d.id]=d.data().status);if(tab==='admin')renderAdmin();if(tab==='rank')renderRank()})}catch(e){console.error(e)}
+  try{unsub=db.collection('pendaftar').onSnapshot(s=>{list=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.tgl||0)-(a.tgl||0));if(tab==='admin')renderAdmin();if(tab==='rank')renderRank()},e=>console.error(e))}catch(e){console.error(e)}
+}
+function renderNav(){
+  const t=[['beranda','Beranda'],['daftar','Daftar'],['status','Cek Status'],['umum','Pengumuman']];
+  if(isAdmin)t.push(['rank','Perangkingan'],['admin','Panel Admin'],['set','Pengaturan']);
+  $('#nav').innerHTML=t.map(([k,v])=>`<button class="${tab===k?'on':''}" data-t="${k}">${v}</button>`).join('');
+  $('#nav').onclick=e=>{const k=e.target.dataset.t;if(k){tab=k;render()}};
+}
+function render(){
+  renderNav();
+  $('#ft').innerHTML=isAdmin?'<a href="#" onclick="firebase.auth().signOut();return false">Keluar Admin</a>':'<a href="#" onclick="tab=\'masuk\';render();return false">Masuk Admin</a>';
+  ({beranda:renderHome,daftar:renderForm,status:renderStatus,admin:renderAdmin,rank:renderRank,umum:renderUmum,set:renderSet,masuk:renderLogin})[tab]();
+  window.scrollTo(0,0);
+}
+function renderHome(){
+  $('#app').innerHTML=`
+  <div class="card"><h2>Selamat datang calon siswa baru</h2>
+  <p>Daftarkan diri secara daring: isi formulir, dapatkan nomor pendaftaran, lalu pantau status seleksi Anda kapan saja.</p>
+  <button class="btn" onclick="tab='daftar';render()">Daftar Sekarang</button></div>
+  <div class="card"><h2>Jadwal</h2><p>Pendaftaran: ${tgl(jadwal.buka)} s.d. ${tgl(jadwal.tutup)}<br>Pengumuman hasil: ${tgl(jadwal.umum)}<br>Daftar ulang: ${tgl(jadwal.ulang)}</p><span class="badge ${terbuka()?'Diterima':'Ditolak'}">Pendaftaran ${terbuka()?'dibuka':'ditutup'}</span>${jadwal.info?`<p>${esc(jadwal.info)}</p>`:''}</div>
+  <div class="card"><h2>Jalur Pendaftaran</h2><div class="grid">
+  ${Object.entries(JALUR).map(([k,v])=>`<div class="jalur"><b>${k}</b><div class="mu">${v}</div></div>`).join('')}</div></div>
+  <div class="card"><h2>Alur Pendaftaran</h2>
+  <ol><li>Isi formulir pendaftaran dan pilih jalur.</li><li>Simpan nomor pendaftaran yang diberikan.</li><li>Panitia memverifikasi data Anda.</li><li>Cek hasil seleksi pada menu Cek Status.</li></ol>
+  <p class="mu">Siapkan dokumen asli (akta kelahiran, kartu keluarga, rapor) untuk verifikasi di sekolah.</p></div>`;
+}
+function renderForm(){
+  if(!terbuka()&&!isAdmin){$('#app').innerHTML=`<div class="card"><h2>Pendaftaran ditutup</h2><p>Periode pendaftaran: ${tgl(jadwal.buka)} s.d. ${tgl(jadwal.tutup)}.</p></div>`;return}
+  $('#app').innerHTML=`<div class="card"><h2>Formulir Pendaftaran</h2>
+  <form id="f" onsubmit="return false">
+  <label>Nama lengkap</label><input id="nama" required>
+  <div class="row"><div><label>NISN</label><input id="nisn" inputmode="numeric" maxlength="10" required></div>
+  <div><label>Jenis kelamin</label><select id="jk"><option>Laki-laki</option><option>Perempuan</option></select></div></div>
+  <div class="row"><div><label>Tempat lahir</label><input id="tl" required></div><div><label>Tanggal lahir</label><input id="tgl" type="date" required></div></div>
+  <label>Asal sekolah (SD/MI)</label><input id="asal" required>
+  <label>Alamat lengkap</label><textarea id="alamat" rows="2" required></textarea>
+  <div class="row"><div><label>Nama orang tua/wali</label><input id="ortu" required></div><div><label>No. HP orang tua/wali</label><input id="hp" inputmode="tel" required></div></div>
+  <div class="row"><div><label>Jalur pendaftaran</label><select id="jalur">${Object.keys(JALUR).map(j=>`<option>${j}</option>`).join('')}</select></div>
+  <div><label>Rata-rata nilai rapor (opsional)</label><input id="nilai" type="number" min="0" max="100" step="0.01"></div></div>
+  <label>Jarak rumah ke sekolah dalam km (untuk jalur domisili)</label><input id="jarak" type="number" min="0" step="0.1">
+  <button class="btn" id="kirim">Kirim Pendaftaran</button></form><div id="hasil"></div></div>`;
+  $('#kirim').onclick=submitForm;
+}
+async function submitForm(){
+  const f=$('#f');
+  if(!f.reportValidity())return;
+  if(!terbuka()&&!isAdmin){$('#hasil').innerHTML='<div class="msg">Pendaftaran sudah ditutup.</div>';return}
+  if(!db){$('#hasil').innerHTML='<div class="msg">Penyimpanan data belum tersedia. Muat ulang halaman.</div>';return}
+  const no='SPMB-2027-'+Array.from(crypto.getRandomValues(new Uint8Array(8)),v=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[v%32]).join('');
+  const d={nama:$('#nama').value.trim(),nisn:$('#nisn').value.trim(),jk:$('#jk').value,tl:$('#tl').value.trim(),tglLahir:$('#tgl').value,asal:$('#asal').value.trim(),alamat:$('#alamat').value.trim(),ortu:$('#ortu').value.trim(),hp:$('#hp').value.trim(),jalur:$('#jalur').value,nilai:$('#nilai').value,jarak:$('#jarak').value,status:'Menunggu',no,tgl:Date.now()};
+  $('#kirim').disabled=true;
+  try{
+    await db.collection('pendaftar').doc(no).set(d);
+    $('#hasil').innerHTML=`<div class="msg"><b>Pendaftaran berhasil.</b><br>Nomor pendaftaran Anda:<br><span style="font-size:1.5rem;font-weight:800;color:var(--pr)">${no}</span><br><span class="mu">Simpan atau cetak nomor ini untuk mengecek status.</span><br><button class="btn s o" style="margin-top:10px" onclick="window.print()">Cetak Bukti</button></div>`;
+    f.reset();
+  }catch(e){$('#hasil').innerHTML='<div class="msg">Gagal menyimpan: '+esc(e.message||e.code)+'</div>'}
+  $('#kirim').disabled=false;
+}
+function renderStatus(){
+  $('#app').innerHTML=`<div class="card"><h2>Cek Status Pendaftaran</h2><label>Nomor pendaftaran</label><input id="no" placeholder="SPMB-2027-XXXXXXXX"><button class="btn" id="cek">Cek Status</button><div id="hasil"></div></div>`;
+  $('#cek').onclick=async()=>{
+    const no=$('#no').value.trim().toUpperCase();if(!no)return;
+    if(!db){$('#hasil').innerHTML='<div class="msg">Data belum tersedia. Muat ulang halaman.</div>';return}
+    try{
+      const s=await db.collection('hasil').doc(no).get();
+      if(!s.exists){$('#hasil').innerHTML='<div class="msg">Belum ada hasil verifikasi untuk nomor ini. Jika Anda baru mendaftar, status Anda <span class="badge Menunggu">Menunggu</span> verifikasi panitia. Pastikan nomor ditulis dengan benar.</div>';return}
+      const d=s.data();
+      $('#hasil').innerHTML=`<div class="msg"><b>${esc(d.nama)}</b> · ${esc(d.no)} · Jalur ${esc(d.jalur)}<br>Status: <span class="badge ${esc(d.status)}">${esc(d.status)}</span></div>`;
+    }catch(e){$('#hasil').innerHTML='<div class="msg">Gagal memuat: '+esc(e.message||e.code)+'</div>'}
+  };
+}
+function renderAdmin(){
+  if(!isAdmin){tab='beranda';return render()}
+  list.forEach(x=>x.status=hs[x.id]||'Menunggu');
+  const cnt=s=>list.filter(x=>x.status===s).length;
+  const rows=list.filter(x=>(!fs||x.status===fs)&&(!q||(x.nama+x.nisn+x.no+x.asal).toLowerCase().includes(q.toLowerCase())));
+  const keep=document.activeElement&&document.activeElement.id==='cari';
+  $('#app').innerHTML=`<div class="stats"><div class="stat"><b>${list.length}</b>Total</div>${STATUS.map(s=>`<div class="stat"><b>${cnt(s)}</b>${s}</div>`).join('')}</div>
+  <div class="card"><div class="bar"><input id="cari" placeholder="Cari nama, NISN, nomor…" value="${esc(q)}"><select id="fs"><option value="">Semua status</option>${STATUS.map(s=>`<option ${fs===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn s o" id="csv">Unduh CSV</button></div>
+  <div class="wrap"><table><tr><th>No / Nama</th><th>Jalur</th><th>Data</th><th>Status</th></tr>
+  ${rows.map(x=>`<tr><td><b>${esc(x.nama)}</b><br><span class="mu">${esc(x.no)}</span></td><td>${esc(x.jalur)}${x.nilai?'<br><span class="mu">Rapor '+esc(x.nilai)+'</span>':''}</td>
+  <td class="mu">NISN ${esc(x.nisn)}<br>${esc(x.asal)}<br>${esc(x.ortu)} · ${esc(x.hp)}</td>
+  <td><select data-id="${esc(x.id)}">${STATUS.map(s=>`<option ${x.status===s?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="4" class="mu">Belum ada data pendaftar.</td></tr>'}</table></div></div>`;
+  $('#cari').oninput=e=>{q=e.target.value;renderAdmin()};
+  if(keep){const c=$('#cari');c.focus();c.setSelectionRange(q.length,q.length)}
+  $('#fs').onchange=e=>{fs=e.target.value;renderAdmin()};
+  $('#csv').onclick=unduh;
+  document.querySelectorAll('select[data-id]').forEach(s=>s.onchange=async e=>{
+    const id=e.target.dataset.id,st=e.target.value;
+    try{const x=list.find(y=>y.id===id);await setStatus(x,st)}catch(err){alert('Gagal memperbarui: '+(err.message||err.code))}
+  });
+}
+async function renderUmum(){
+  $('#app').innerHTML=`<div class="card"><h2>Pengumuman Hasil Seleksi</h2><div id="u" class="mu">Memuat…</div></div>`;
+  const u=$('#u');
+  if(!jadwal.umumkan){u.textContent='Hasil seleksi belum diumumkan.'+(jadwal.umum?' Jadwal pengumuman: '+tgl(jadwal.umum)+'.':'');return}
+  if(!db){u.textContent='Data belum tersedia. Muat ulang halaman.';return}
+  try{
+    const s=await db.collection('diterima').get(),ok=s.docs.map(d=>d.data());
+    u.className='';
+    u.innerHTML=ok.length?Object.keys(JALUR).map(j=>{const a=ok.filter(x=>x.jalur===j).sort((p,q)=>p.nama.localeCompare(q.nama));return a.length?`<h3>Jalur ${j} (${a.length})</h3><ol>${a.map(x=>`<li>${esc(x.nama)} <span class="mu">${esc(x.no)}</span></li>`).join('')}</ol>`:''}).join('')+(jadwal.ulang?`<p><b>Daftar ulang: ${tgl(jadwal.ulang)}</b></p>`:''):'Belum ada peserta yang diterima.';
+  }catch(e){u.textContent='Gagal memuat: '+(e.message||e.code)}
+}
+function renderSet(){
+  if(!isAdmin){tab='beranda';return render()}
+  const f=(id,l)=>`<div><label>${l}</label><input type="date" id="${id}" value="${esc(jadwal[id]||'')}"></div>`;
+  $('#app').innerHTML=`<div class="card"><h2>Pengaturan Jadwal dan Pengumuman</h2><div class="row">${f('buka','Pendaftaran dibuka')}${f('tutup','Pendaftaran ditutup')}${f('umum','Tanggal pengumuman')}${f('ulang','Tanggal daftar ulang')}</div><label>Informasi tambahan untuk pendaftar</label><textarea id="info" rows="3">${esc(jadwal.info||'')}</textarea><label><input type="checkbox" id="umumkan" style="width:auto" ${jadwal.umumkan?'checked':''}> Tampilkan daftar peserta yang diterima di menu Pengumuman</label><button class="btn" id="sj">Simpan Pengaturan</button><div id="hasil"></div></div>`;
+  $('#sj').onclick=async()=>{
+    const o={info:$('#info').value.trim(),umumkan:$('#umumkan').checked};
+    ['buka','tutup','umum','ulang'].forEach(k=>o[k]=$('#'+k).value);
+    try{await db.collection('config').doc('jadwal').set(o);$('#hasil').innerHTML='<div class="msg">Pengaturan tersimpan.</div>'}catch(e){$('#hasil').innerHTML='<div class="msg">Gagal: '+esc(e.message||e.code)+'</div>'}
+  };
+}
+function cmp(a,b){const k=x=>x.jalur==='Domisili'?[parseFloat(x.jarak)||1e9,x.tglLahir||'']:[-(parseFloat(x.nilai)||0),x.tgl||0];const p=k(a),q=k(b);return(p[0]-q[0])||(p[1]<q[1]?-1:p[1]>q[1]?1:0)}
+function renderRank(){
+  if(!isAdmin){tab='beranda';return render()}
+  list.forEach(x=>x.status=hs[x.id]||'Menunggu');
+  const js=Object.keys(JALUR);
+  $('#app').innerHTML=`<div class="card"><h2>Kuota dan Perangkingan</h2><p class="mu">Hanya pendaftar berstatus Terverifikasi atau Diterima yang diperingkat. Domisili: jarak terdekat, lalu usia tertua. Jalur lain: nilai rapor tertinggi, lalu waktu mendaftar.</p><div class="row">${js.map(j=>`<div><label>Kuota ${j}</label><input type="number" min="0" data-k="${j}" value="${esc(kuota[j]??'')}"></div>`).join('')}</div><button class="btn" id="sk">Simpan Kuota</button></div>`+
+  js.map(j=>{
+    const K=parseInt(kuota[j])||0,rk=list.filter(x=>x.jalur===j&&(x.status==='Terverifikasi'||x.status==='Diterima')).sort(cmp);
+    return `<div class="card"><h2>${j} <span class="mu">(kuota ${K}, peringkat ${rk.length})</span></h2><div class="wrap"><table><tr><th>#</th><th>Nama</th><th>${j==='Domisili'?'Jarak (km)':'Nilai rapor'}</th><th>Status</th></tr>${rk.map((x,i)=>`<tr class="${i<K?'in':''}"><td>${i+1}</td><td>${esc(x.nama)}<br><span class="mu">${esc(x.no)}</span></td><td>${esc(j==='Domisili'?x.jarak:x.nilai)||'-'}</td><td><span class="badge ${x.status}">${x.status}</span></td></tr>`).join('')||'<tr><td colspan="4" class="mu">Belum ada pendaftar terverifikasi.</td></tr>'}</table></div><button class="btn s" style="margin-top:10px" data-a="${j}">Terima otomatis sesuai kuota</button></div>`}).join('');
+  $('#sk').onclick=async()=>{const o={};document.querySelectorAll('input[data-k]').forEach(i=>o[i.dataset.k]=parseInt(i.value)||0);try{await db.collection('config').doc('kuota').set(o)}catch(e){alert('Gagal menyimpan: '+(e.message||e.code))}};
+  document.querySelectorAll('button[data-a]').forEach(b=>b.onclick=async()=>{
+    const j=b.dataset.a,K=parseInt(kuota[j])||0;
+    const top=list.filter(x=>x.jalur===j&&(x.status==='Terverifikasi'||x.status==='Diterima')).sort(cmp).slice(0,K).filter(x=>x.status==='Terverifikasi');
+    if(!K)return alert('Atur dan simpan kuota terlebih dahulu.');
+    if(!top.length)return alert('Tidak ada pendaftar baru yang perlu diterima.');
+    if(!confirm('Terima '+top.length+' pendaftar jalur '+j+' sesuai peringkat?'))return;
+    try{for(const x of top)await setStatus(x,'Diterima')}catch(e){alert('Gagal: '+(e.message||e.code))}
+  });
+}
+async function unduh(){
+  const h=['No','Nama','NISN','JK','Tempat Lahir','Tgl Lahir','Asal Sekolah','Alamat','Orang Tua','HP','Jalur','Nilai','Jarak','Status'];
+  const c=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const r=list.map(x=>[x.no,x.nama,x.nisn,x.jk,x.tl,x.tglLahir,x.asal,x.alamat,x.ortu,x.hp,x.jalur,x.nilai,x.jarak,x.status].map(c).join(','));
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+[h.map(c).join(','),...r].join('\n')],{type:'text/csv'}));a.download='pendaftar-spmb.csv';a.click()}catch(e){console.error(e)}
+}
+init();
+</script>
+</body>
+</html>
