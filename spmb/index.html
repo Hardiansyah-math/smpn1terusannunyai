@@ -52,6 +52,11 @@ tr.in{background:color-mix(in srgb,var(--ok) 14%,transparent)}
 const JALUR={Domisili:'Berdasarkan jarak tempat tinggal ke sekolah.',Afirmasi:'Untuk calon siswa dari keluarga kurang mampu dan penyandang disabilitas.',Mutasi:'Untuk anak yang orang tuanya dipindahtugaskan, atau anak guru di sekolah ini.',Prestasi:'Berdasarkan nilai rapor atau prestasi akademik dan non-akademik.'};
 const STATUS=['Menunggu','Terverifikasi','Diterima','Ditolak'];
 let jadwal={},kuota={},hs={},db=null,isAdmin=false,tab='beranda',list=[],unsub=null,q='',fs='';
+// Pendaftaran SPMB dibuka 1 Juni 2027. Tanggal ini adalah batas paling cepat:
+// bila admin mengisi tanggal dibuka yang lebih lambat di Pengaturan, tanggal itu yang berlaku.
+const BUKA_SPMB='2027-06-01';
+function tglBuka(){return (jadwal.buka&&jadwal.buka>BUKA_SPMB)?jadwal.buka:BUKA_SPMB}
+function tglTutup(){const t=jadwal.tutup;return (t&&t>=tglBuka())?t:null}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -74,7 +79,7 @@ function renderLogin(){
   $('#lg2').onclick=async()=>{try{await firebase.auth().signInWithEmailAndPassword($('#em').value.trim(),$('#pw').value);tab='admin';render()}catch(e){$('#hasil').innerHTML='<div class="msg">Email atau kata sandi salah.</div>'}};
 }
 const tgl=s=>s?new Date(s+'T00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-';
-function terbuka(){const t=new Date().toLocaleDateString('en-CA');return !(jadwal.buka&&t<jadwal.buka)&&!(jadwal.tutup&&t>jadwal.tutup)}
+function terbuka(){const t=new Date().toLocaleDateString('en-CA');const u=tglTutup();return t>=tglBuka()&&(!u||t<=u)}
 function pub(){try{db.collection('config').doc('jadwal').onSnapshot(s=>{jadwal=s.exists?s.data():{};if(tab==='beranda')renderHome();if(tab==='umum')renderUmum()})}catch(e){console.error(e)}}
 function listen(){
   if(unsub)return;
@@ -95,11 +100,12 @@ function render(){
   window.scrollTo(0,0);
 }
 function renderHome(){
+  const daftarBtn=terbuka()?'<button class="btn" onclick="tab=\'daftar\';render()">Daftar Sekarang</button>':'<div class="msg"><b>Pendaftaran belum dibuka.</b><br>Pendaftaran SPMB dibuka mulai <b>'+tgl(tglBuka())+'</b>. Silakan kembali pada bulan Juni 2027.</div>';
   $('#app').innerHTML=`
   <div class="card"><h2>Selamat datang calon siswa baru</h2>
   <p>Daftarkan diri secara daring: isi formulir, dapatkan nomor pendaftaran, lalu pantau status seleksi Anda kapan saja.</p>
-  <button class="btn" onclick="tab='daftar';render()">Daftar Sekarang</button></div>
-  <div class="card"><h2>Jadwal</h2><p>Pendaftaran: ${tgl(jadwal.buka)} s.d. ${tgl(jadwal.tutup)}<br>Pengumuman hasil: ${tgl(jadwal.umum)}<br>Daftar ulang: ${tgl(jadwal.ulang)}</p><span class="badge ${terbuka()?'Diterima':'Ditolak'}">Pendaftaran ${terbuka()?'dibuka':'ditutup'}</span>${jadwal.info?`<p>${esc(jadwal.info)}</p>`:''}</div>
+  ${daftarBtn}</div>
+  <div class="card"><h2>Jadwal</h2><p>Pendaftaran: ${tgl(tglBuka())} s.d. ${tgl(tglTutup())}<br>Pengumuman hasil: ${tgl(jadwal.umum)}<br>Daftar ulang: ${tgl(jadwal.ulang)}</p><span class="badge ${terbuka()?'Diterima':'Ditolak'}">Pendaftaran ${terbuka()?'dibuka':'ditutup'}</span>${jadwal.info?`<p>${esc(jadwal.info)}</p>`:''}</div>
   <div class="card"><h2>Jalur Pendaftaran</h2><div class="grid">
   ${Object.entries(JALUR).map(([k,v])=>`<div class="jalur"><b>${k}</b><div class="mu">${v}</div></div>`).join('')}</div></div>
   <div class="card"><h2>Alur Pendaftaran</h2>
@@ -107,7 +113,7 @@ function renderHome(){
   <p class="mu">Siapkan dokumen asli (akta kelahiran, kartu keluarga, rapor) untuk verifikasi di sekolah.</p></div>`;
 }
 function renderForm(){
-  if(!terbuka()&&!isAdmin){$('#app').innerHTML=`<div class="card"><h2>Pendaftaran ditutup</h2><p>Periode pendaftaran: ${tgl(jadwal.buka)} s.d. ${tgl(jadwal.tutup)}.</p></div>`;return}
+  if(!terbuka()&&!isAdmin){const t=new Date().toLocaleDateString('en-CA');const isi=t<tglBuka()?('Pendaftaran SPMB dibuka mulai <b>'+tgl(tglBuka())+'</b>. Silakan kembali pada bulan Juni 2027.'):('Periode pendaftaran: '+tgl(tglBuka())+' s.d. '+tgl(tglTutup())+'.');$('#app').innerHTML='<div class="card"><h2>'+(t<tglBuka()?'Pendaftaran belum dibuka':'Pendaftaran ditutup')+'</h2><p>'+isi+'</p></div>';return}
   $('#app').innerHTML=`<div class="card"><h2>Formulir Pendaftaran</h2>
   <form id="f" onsubmit="return false">
   <label>Nama lengkap</label><input id="nama" required>
@@ -186,7 +192,7 @@ async function renderUmum(){
 function renderSet(){
   if(!isAdmin){tab='beranda';return render()}
   const f=(id,l)=>`<div><label>${l}</label><input type="date" id="${id}" value="${esc(jadwal[id]||'')}"></div>`;
-  $('#app').innerHTML=`<div class="card"><h2>Pengaturan Jadwal dan Pengumuman</h2><div class="row">${f('buka','Pendaftaran dibuka')}${f('tutup','Pendaftaran ditutup')}${f('umum','Tanggal pengumuman')}${f('ulang','Tanggal daftar ulang')}</div><label>Informasi tambahan untuk pendaftar</label><textarea id="info" rows="3">${esc(jadwal.info||'')}</textarea><label><input type="checkbox" id="umumkan" style="width:auto" ${jadwal.umumkan?'checked':''}> Tampilkan daftar peserta yang diterima di menu Pengumuman</label><button class="btn" id="sj">Simpan Pengaturan</button><div id="hasil"></div></div>`;
+  $('#app').innerHTML=`<div class="card"><h2>Pengaturan Jadwal dan Pengumuman</h2><div class="row">${f('buka','Pendaftaran dibuka')}${f('tutup','Pendaftaran ditutup')}${f('umum','Tanggal pengumuman')}${f('ulang','Tanggal daftar ulang')}</div><label>Informasi tambahan untuk pendaftar</label><textarea id="info" rows="3">${esc(jadwal.info||'')}</textarea><label><input type="checkbox" id="umumkan" style="width:auto" ${jadwal.umumkan?'checked':''}> Tampilkan daftar peserta yang diterima di menu Pengumuman</label><p class="mu">Pendaftaran paling cepat dibuka 1 Juni 2027. Bila tanggal dibuka di atas diisi lebih lambat dari itu, tanggal tersebut yang berlaku.</p><button class="btn" id="sj">Simpan Pengaturan</button><div id="hasil"></div></div>`;
   $('#sj').onclick=async()=>{
     const o={info:$('#info').value.trim(),umumkan:$('#umumkan').checked};
     ['buka','tutup','umum','ulang'].forEach(k=>o[k]=$('#'+k).value);
