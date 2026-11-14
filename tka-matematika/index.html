@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CBT Simulasi TKA Matematika SMP 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f6;--card:#fff;--ink:#12263a;--mut:#5a6b7b;--line:#cfd9e1;--pri:#0b5c8a;--pri-t:#fff;--ok:#1f8a5b;--flag:#d99a00;--bad:#b3261e;--soft:#e3eef5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a24;--card:#17252f;--ink:#e6eef4;--mut:#9fb1c0;--line:#2c4050;--pri:#5bb4e8;--pri-t:#08212f;--ok:#45c88b;--flag:#f0b72f;--bad:#ff8a80;--soft:#1f3341}}
+:root[data-theme="dark"]{--bg:#0f1a24;--card:#17252f;--ink:#e6eef4;--mut:#9fb1c0;--line:#2c4050;--pri:#5bb4e8;--pri-t:#08212f;--ok:#45c88b;--flag:#f0b72f;--bad:#ff8a80;--soft:#1f3341}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Atkinson Hyperlegible",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:10}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--line)}
+header .in{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.brand{font-weight:700;font-size:16px}.brand small{display:block;font-weight:400;color:var(--mut);font-size:13px}
+.timer{font-weight:700;font-size:20px;background:var(--soft);border-radius:8px;padding:4px 12px;font-variant-numeric:tabular-nums}
+.timer.low{background:var(--bad);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+h1{font-size:26px;margin:0 0 8px}h2{font-size:20px;margin:0 0 10px}
+.mut{color:var(--mut)}
+input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--bg);color:var(--ink)}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--pri);background:transparent;color:var(--pri);padding:10px 16px;font-weight:700}
+button.p{background:var(--pri);color:var(--pri-t)}button:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible{outline:3px solid var(--flag);outline-offset:2px}
+.grid{display:grid;grid-template-columns:1fr 250px;gap:16px;align-items:start}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.chip{background:var(--soft);border-radius:99px;padding:2px 12px;font-size:14px}
+.hint{font-size:15px;color:var(--mut);margin:-4px 0 12px}
+.q{font-size:19px;margin:0 0 16px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:8px;padding:11px 14px;margin:8px 0;cursor:pointer}
+.opt:hover{border-color:var(--pri)}.opt.sel{border-color:var(--pri);background:var(--soft)}
+.opt input{margin-top:6px;accent-color:var(--pri)}
+.opt b{min-width:20px}
+table.k{width:100%;border-collapse:collapse}
+table.k td,table.k th{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;vertical-align:top}
+table.k th{font-size:14px;color:var(--mut)}table.k td.c,table.k th.c{text-align:center;width:72px}
+table.k input{accent-color:var(--pri);width:20px;height:20px}
+.bar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}
+.flag{display:flex;gap:8px;align-items:center;cursor:pointer;font-weight:700}
+.flag input{accent-color:var(--flag);width:20px;height:20px}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.nav button{padding:8px 0;border:1.5px solid var(--line);color:var(--ink);position:relative}
+.nav button.a{background:var(--ok);border-color:var(--ok);color:#fff}
+.nav button.f{background:var(--flag);border-color:var(--flag);color:#1b1500}
+.nav button.cur{outline:3px solid var(--pri);outline-offset:1px}
+.leg{font-size:14px;color:var(--mut);margin-top:12px;display:grid;gap:4px}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1.5px solid var(--line)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal .card{max-width:420px;width:100%}
+.score{font-size:64px;font-weight:700;line-height:1;color:var(--pri)}
+.rev{border-top:1px solid var(--line);padding:16px 0}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+.exp{background:var(--soft);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:16px}
+.tb{width:100%;border-collapse:collapse;margin-top:10px}.tb td,.tb th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.rd{background:var(--soft);border-radius:8px;padding:12px 16px;margin:0 0 14px;font-size:16px}.rd ul{margin:6px 0;padding-left:20px}.q svg,.opt svg{display:block}.hide{display:none}
+</style>
+</head>
+<body>
+<header><div class="in"><div class="brand">CBT Simulasi TKA<small>Matematika SMP 2026</small></div><div id="tm" class="timer hide"></div></div></header>
+<div class="wrap" id="app"></div>
+<script>
+var CB=["Benar","Salah"],T=["Bilangan","Aljabar","Geometri dan Pengukuran","Data dan Peluang"];
+var B={
+r1:"<b>Bacaan 1 (untuk soal nomor 2 dan 3)</b><br>Dika gemar berbelanja lewat aplikasi dompet digital. Aplikasi itu memberi <i>koin kembali</i>, yaitu persentase dari total belanja yang dikembalikan dalam bentuk koin setelah syarat terpenuhi. Berbeda dengan diskon yang memotong harga di awal. Kupon yang tersedia:<ul><li>Kupon P: kembali 20% s/d Rp30.000</li><li>Kupon Q: kembali 10% s/d Rp50.000</li><li>Kupon R: kembali 50% s/d Rp10.000</li><li>Kupon S: kembali 5% s/d Rp100.000</li></ul>Contoh: belanja Rp200.000 dengan Kupon P, 20% × 200.000 = Rp40.000, tetapi batasnya Rp30.000 sehingga koin yang diterima Rp30.000.",
+r2:"<b>Bacaan 2 (untuk soal nomor 14 dan 15)</b><br>Pengelola taman memasang paving pada jalur berundak dengan pola tertentu. Setiap tingkat memakai dua jenis paving, yaitu hitam dan abu-abu. Tingkat 1 memakai 2 paving hitam dan 3 paving abu-abu. Tingkat 2 memakai 4 paving hitam dan 5 paving abu-abu. Tingkat 3 memakai 6 paving hitam dan 7 paving abu-abu. Tingkat berikutnya mengikuti pola yang sama.",
+r3:"<b>Bacaan 3 (untuk soal nomor 23 dan 24)</b><br>Pak Rudi memasok air minum curah. Ia memiliki dua tandon: Tandon A berukuran 1,5 m × 1 m × 0,8 m dan Tandon B berukuran 2 m × 1,2 m × 1 m. Ingat 1 m³ = 1.000 liter."};
+function NL(v,c,d){var s='<svg viewBox="0 0 280 46" width="280" style="max-width:100%"><line x1="6" y1="20" x2="274" y2="20" stroke="currentColor" stroke-width="1.5"/>';
+for(var n=-8;n<=-2;n++){var x=20+(n+8)*40;s+='<line x1="'+x+'" y1="16" x2="'+x+'" y2="24" stroke="currentColor"/><text x="'+x+'" y="40" font-size="11" text-anchor="middle" fill="currentColor">'+n+'</text>'}
+var x=20+(v+8)*40,e=d<0?6:274;
+return s+'<line x1="'+x+'" y1="20" x2="'+e+'" y2="20" stroke="#1593c9" stroke-width="5"/><circle cx="'+x+'" cy="20" r="5" fill="'+(c?'#1593c9':'#fff')+'" stroke="#1593c9" stroke-width="2"/></svg>'}
+function ARR(p,t){var A=[2,4,6,8],Bb=["p","q","r","s"],s='<svg viewBox="0 0 120 110" width="120"><text x="10" y="10" font-size="11" font-weight="700" fill="currentColor">A</text><text x="95" y="10" font-size="11" font-weight="700" fill="currentColor">B</text>';
+A.forEach(function(a,i){var y=28+i*24;s+='<circle cx="22" cy="'+y+'" r="3" fill="currentColor"/><text x="8" y="'+(y+4)+'" font-size="11" fill="currentColor">'+a+'</text><circle cx="98" cy="'+y+'" r="3" fill="currentColor"/><text x="106" y="'+(y+4)+'" font-size="11" fill="currentColor">'+Bb[i]+'</text>'});
+p.forEach(function(e){s+='<line x1="22" y1="'+(28+e[0]*24)+'" x2="98" y2="'+(28+e[1]*24)+'" stroke="#1593c9" stroke-width="1.6"/>'});
+return '<figure style="margin:0;text-align:center">'+s+'</svg><figcaption style="font-size:14px"><b>'+t+'</b></figcaption></figure>'}
+function LG(){var s='<svg viewBox="0 0 300 200" width="300" style="max-width:100%;font-size:10px">';
+for(var y=0;y<=60;y+=10){var Y=170-y*2.4;s+='<line x1="40" y1="'+Y+'" x2="296" y2="'+Y+'" stroke="#8aa" stroke-opacity=".4"/><text x="34" y="'+(Y+3)+'" text-anchor="end" fill="currentColor">'+y+'</text>'}
+for(var x=0;x<=12;x+=2){var X=40+x*21;s+='<line x1="'+X+'" y1="26" x2="'+X+'" y2="170" stroke="#8aa" stroke-opacity=".4"/><text x="'+X+'" y="184" text-anchor="middle" fill="currentColor">'+x+'</text>'}
+return s+'<polyline points="40,150.8 292,35.6" fill="none" stroke="#1593c9" stroke-width="2.5"/><circle cx="40" cy="150.8" r="3.5" fill="#1593c9"/><text x="40" y="14" fill="currentColor">Biaya (ribu rupiah)</text><text x="170" y="198" text-anchor="middle" fill="currentColor">Jarak (km)</text></svg>'}
+function PL(v){var d=["Sn","Sl","Rb","Km","Jm"],s='<svg viewBox="0 0 170 104" width="170"><path d="M20 8V85H165" fill="none" stroke="currentColor"/><text x="17" y="88" font-size="9" text-anchor="end" fill="currentColor">30</text><text x="17" y="28" font-size="9" text-anchor="end" fill="currentColor">60</text>',p=[];
+v.forEach(function(a,i){var x=34+i*30,y=85-(a-30)*2;p.push(x+','+y);s+='<text x="'+x+'" y="98" font-size="9" text-anchor="middle" fill="currentColor">'+d[i]+'</text><circle cx="'+x+'" cy="'+y+'" r="2.5" fill="#1593c9"/>'});
+return s+'<polyline points="'+p.join(" ")+'" fill="none" stroke="#1593c9" stroke-width="2"/></svg>'}
+function BC(v){var s='<svg viewBox="0 0 300 120" width="300" style="max-width:100%;font-size:10px"><path d="M26 10V90H296" fill="none" stroke="currentColor"/>';
+for(var j=0;j<=5;j++)s+='<text x="21" y="'+(93-j*14)+'" text-anchor="end" fill="currentColor">'+j+'</text>';
+v.forEach(function(a,i){var x=34+i*26;s+='<rect x="'+x+'" y="'+(90-a*14)+'" width="18" height="'+a*14+'" fill="#1593c9"/><text x="'+(x+9)+'" y="'+(87-a*14)+'" text-anchor="middle" fill="currentColor">'+a+'</text><text x="'+(x+9)+'" y="102" text-anchor="middle" fill="currentColor">'+(i+1)+'</text>'});
+return s+'<text x="165" y="116" text-anchor="middle" fill="currentColor">Hari ke-</text></svg>'}
+var SV1='<svg viewBox="0 0 200 92" width="200"><line x1="8" y1="70" x2="192" y2="70" stroke="currentColor" stroke-width="1.5"/><line x1="110" y1="70" x2="84.6" y2="15.6" stroke="currentColor" stroke-width="1.5"/><g font-size="11" fill="currentColor"><text x="2" y="84">A</text><text x="188" y="84">B</text><text x="78" y="12">P</text><text x="106" y="86">Q</text><text x="70" y="62">65°</text><text x="118" y="62">(3x+10)°</text></g></svg>';
+var SV2='<svg viewBox="0 0 220 110" width="220"><line x1="10" y1="30" x2="190" y2="30" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="80" x2="190" y2="80" stroke="currentColor" stroke-width="1.5"/><line x1="60" y1="5" x2="130" y2="105" stroke="currentColor" stroke-width="1.5"/><g font-size="11" fill="currentColor"><text x="196" y="34">k</text><text x="196" y="84">l</text><text x="84" y="25">68°</text><text x="120" y="75">(3z − 4)°</text></g></svg>';
+var Q=[
+{t:"pg",k:0,q:"Hasil dari operasi bilangan berpangkat berikut adalah …<div style='text-align:center;font-size:20px;margin:8px 0'>(3⁵ × 3⁻⁸) ÷ 3⁻²</div>",o:["3⁻¹","3⁻⁵","3⁻⁶","3⁵"],a:0,e:"3⁵ × 3⁻⁸ = 3⁻³. Lalu 3⁻³ ÷ 3⁻² = 3^(−3 − (−2)) = 3⁻¹."},
+{t:"pk",k:0,r:"r1",q:"Dika akan membeli hadiah untuk dua temannya. Hadiah dikirim ke alamat masing-masing sehingga ia melakukan dua kali transaksi. Setiap transaksi memakai satu kupon dan setiap kupon hanya dapat dipakai satu kali. Harga tiap hadiah Rp80.000. Jika Dika menginginkan koin kembali lebih dari Rp9.000 pada setiap transaksi, kupon mana saja yang harus dipilih?",o:["Kupon P","Kupon Q","Kupon R","Kupon S"],a:[0,2],e:"Untuk Rp80.000: P = 20% = 16.000 (di bawah batas 30.000); Q = 8.000; R = 50% = 40.000 tetapi dibatasi 10.000; S = 4.000. Yang lebih dari 9.000 adalah P dan R."},
+{t:"kat",k:0,r:"r1",q:"Dika memiliki Kupon P, Q, dan S. Tentukan benar atau salah pernyataan berikut tentang kupon yang memberi koin terbesar.",s:["Untuk belanja Rp150.000, koin terbesar diperoleh dengan Kupon P.","Untuk belanja Rp600.000, koin terbesar diperoleh dengan Kupon Q.","Untuk belanja Rp2.000.000, koin terbesar diperoleh dengan Kupon Q."],a:[true,true,false],e:"Rp150.000: P = 30.000, Q = 15.000, S = 7.500. Rp600.000: P = 30.000 (batas), Q = 50.000 (batas), S = 30.000. Rp2.000.000: P = 30.000, Q = 50.000, S = 100.000 (batas), sehingga yang terbesar adalah S."},
+{t:"pg",k:0,q:"Seorang peneliti membandingkan empat tanaman hias.<table class='tb'><tr><th>Tanaman</th><th>Tinggi (cm)</th><th>Lebar daun (cm)</th></tr><tr><td>A</td><td>45,5</td><td>12,35</td></tr><tr><td>B</td><td>45,55</td><td>12,5</td></tr><tr><td>C</td><td>45,25</td><td>12,45</td></tr><tr><td>D</td><td>44,9</td><td>12,3</td></tr></table>Tanaman yang diteliti pertama adalah yang paling tinggi dan memiliki daun paling lebar. Tanaman tersebut adalah …",o:["Tanaman A","Tanaman B","Tanaman C","Tanaman D"],a:1,e:"Tinggi terbesar 45,55 cm (B). Lebar daun terbesar 12,5 cm (B). Jadi tanaman B."},
+{t:"pg",k:0,q:"Suhu penyimpanan makanan yang direkomendasikan:<table class='tb'><tr><th>Makanan</th><th>Suhu</th></tr><tr><td>Es krim</td><td>≤ −12 °C</td></tr><tr><td>Ikan segar</td><td>= −2 °C</td></tr><tr><td>Susu</td><td>= 4 °C</td></tr><tr><td>Telur</td><td>= 7 °C</td></tr></table>Berapa suhu lemari pendingin yang direkomendasikan untuk menyimpan ikan segar?",o:["2 derajat di bawah 0 °C","2 derajat di atas 0 °C","12 derajat di bawah 0 °C","12 derajat di atas 0 °C"],a:0,e:"−2 °C berarti 2 derajat di bawah 0 °C."},
+{t:"kat",k:1,q:"Diketahui bentuk aljabar 4pq − q² + 5p²q + 2pq² − 9. Tentukan benar atau salah tiap pernyataan.",s:["Terdapat 2 variabel, yaitu p dan q.","Konstanta pada bentuk aljabar tersebut adalah 9.","Bilangan 4, −1, 5, dan 2 merupakan koefisien."],a:[true,false,true],e:"Variabelnya p dan q. Konstantanya −9, bukan 9. Koefisien suku-sukunya adalah 4, −1, 5, dan 2."},
+{t:"kat",k:1,c:["Fungsi","Bukan fungsi"],q:"Perhatikan tiga diagram panah berikut dengan himpunan A = {2, 4, 6, 8} dan B = {p, q, r, s}.<div style='display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0'>"+ARR([[0,1],[1,0],[2,3],[3,2]],"Diagram 1")+ARR([[0,0],[0,1],[1,2],[2,3],[3,3]],"Diagram 2")+ARR([[0,0],[1,0],[2,1],[3,2]],"Diagram 3")+"</div>Tentukan fungsi atau bukan fungsi pada setiap diagram.",s:["Diagram 1","Diagram 2","Diagram 3"],a:[true,false,true],e:"Fungsi: setiap anggota A tepat satu pasangan di B. Diagram 2 bukan fungsi karena anggota 2 memiliki dua pasangan. Diagram 3 fungsi walau 2 dan 4 berpasangan dengan p yang sama."},
+{t:"kat",k:1,q:"Taksi daring menetapkan biaya buka pintu ditambah tarif tiap kilometer. Grafik berikut menunjukkan biaya perjalanan terhadap jarak.<div style='margin:8px 0'>"+LG()+"</div>Tentukan benar atau salah tiap pernyataan.",s:["Penumpang yang menempuh 8 km membayar Rp40.000.","Biaya perjalanan 5 km tanpa biaya buka pintu adalah Rp28.000.","Biaya perjalanan 12 km kurang dari Rp60.000."],a:[true,false,true],e:"Biaya buka pintu Rp8.000 dan tarif Rp4.000 per km, sehingga biaya = 8 + 4x (ribu). 8 km: 40 ribu. 5 km tanpa buka pintu: 20 ribu, bukan 28 ribu. 12 km: 56 ribu."},
+{t:"kat",k:1,c:["Bisa ditanami","Tidak bisa ditanami"],q:"Taman sekolah digambarkan pada bidang koordinat Kartesius dengan pusat (0, 0). Pak Aman hanya akan menanam pohon mangga di Kuadran I dan Kuadran IV. Daerah persegi dengan sudut (1, 1) sampai (5, 5) sudah menjadi kebun sayur sehingga tidak boleh ditanami. Tentukan apakah titik berikut dapat ditanami pohon mangga.",s:["(3, 4)","(7, −2)","(−5, −5)"],a:[false,true,false],e:"(3, 4) berada di kebun sayur. (7, −2) di Kuadran IV dan kosong. (−5, −5) di Kuadran III."},
+{t:"pg",k:1,q:"Diketahui pertidaksamaan 4x − 9 ≥ 7x + 6. Manakah garis bilangan yang menunjukkan himpunan penyelesaiannya?",o:[NL(-5,true,-1),NL(-5,true,1),NL(-5,false,-1),NL(-5,false,1)],a:0,e:"4x − 7x ≥ 6 + 9 sehingga −3x ≥ 15. Dibagi −3 (tanda berbalik): x ≤ −5. Titik penuh pada −5 dan arah ke kiri."},
+{t:"pg",k:1,q:"Di sebuah kantin, 2 donat dan 3 roti dijual Rp18.000, sedangkan 3 donat dan 1 roti dijual Rp13.000. Berapa harga 4 donat dan 2 roti?",o:["Rp14.000","Rp18.000","Rp20.000","Rp22.000"],a:2,e:"Dari sistem persamaan, donat Rp3.000 dan roti Rp4.000. Maka 4 × 3.000 + 2 × 4.000 = Rp20.000."},
+{t:"pg",k:1,q:"Ani membeli 6 pensil dan 4 penghapus. Budi membeli setengah kali lipat dari masing-masing jumlah yang dibeli Ani. Cici membeli dua kali lipat dari masing-masing jumlah yang dibeli Ani. Jika harga satu pensil x dan satu penghapus y, kalimat matematika total harga yang dibayar ketiganya adalah …",o:["21x + 14y","18x + 12y","12x + 8y","9x + 6y"],a:0,e:"Ani 6x + 4y, Budi 3x + 2y, Cici 12x + 8y. Jumlahnya 21x + 14y."},
+{t:"pg",k:1,q:"Sebuah persewaan sepeda mencatat paket sewa dalam pasangan berurutan (lama sewa dalam jam, biaya dalam rupiah): {(1, 15.000), (2, 25.000), (3, 35.000), (5, 55.000)}. Jika x adalah lama sewa, rumus fungsi f(x) yang menyatakan biaya sewa adalah …",o:["f(x) = 10.000x + 5.000","f(x) = 10.000x + 15.000","f(x) = 15.000x − 5.000","f(x) = 12.500x + 2.500"],a:0,e:"Kenaikan biaya tiap jam Rp10.000, sehingga f(x) = 10.000x + b. Dari f(1) = 15.000 diperoleh b = 5.000."},
+{t:"pg",k:1,r:"r2",q:"Jika jalur dibuat dengan 10 tingkat, berapa jumlah seluruh paving (hitam dan abu-abu) yang ada pada tingkat ke-10?",o:["31 paving","40 paving","41 paving","42 paving"],a:2,e:"Paving hitam = 2n dan abu-abu = 2n + 1. Pada n = 10: 20 + 21 = 41."},
+{t:"kat",k:1,r:"r2",q:"Dua jalur yang sama persis, masing-masing 8 tingkat, akan dibangun. Persediaan hanya 130 paving hitam dan 150 paving abu-abu. Tentukan benar atau salah tiap pernyataan.",s:["Diperlukan tambahan 14 paving hitam.","Diperlukan tambahan 12 paving abu-abu.","Diperlukan tambahan total 24 paving (hitam maupun abu-abu)."],a:[true,false,true],e:"Hitam per jalur 2(1 + … + 8) = 72, dua jalur 144 (kurang 14). Abu-abu per jalur 72 + 8 = 80, dua jalur 160 (kurang 10). Total tambahan 24."},
+{t:"pg",k:2,q:"Garis AB dan garis PQ berpotongan di titik Q seperti gambar.<div style='margin:8px 0'>"+SV1+"</div>Nilai x yang tepat adalah …",o:["25°","35°","45°","115°"],a:1,e:"Sudut berpelurus: 65 + (3x + 10) = 180, sehingga 3x = 105 dan x = 35."},
+{t:"pg",k:2,q:"Sebuah prisma segitiga siku-siku memiliki alas dengan sisi 6 cm, 8 cm, dan 10 cm. Tinggi prisma 10 cm. Luas seluruh jaring-jaring prisma tersebut adalah …",o:["240 cm²","288 cm²","336 cm²","480 cm²"],a:1,e:"Dua alas = 2 × ½ × 6 × 8 = 48. Selimut = (6 + 8 + 10) × 10 = 240. Total 288 cm²."},
+{t:"pg",k:2,q:"Garis k dan l sejajar dan dipotong oleh sebuah garis transversal.<div style='margin:8px 0'>"+SV2+"</div>Nilai z adalah …",o:["16","24","32","72"],a:1,e:"Kedua sudut sehadan sehingga sama besar: 3z − 4 = 68, 3z = 72, z = 24."},
+{t:"pg",k:2,q:"Pak Anton membuat tangga dengan 12 anak tangga yang masing-masing tingginya 20 cm. Jarak mendatar dari ujung bawah ke ujung atas tangga 320 cm. Pagar dipasang lurus sepanjang kemiringan tangga. Bahan yang tersedia: kayu jati 5,5 m, kayu meranti 4,2 m, besi 4,8 m, dan aluminium 3,9 m. Bahan yang harus dipilih agar cukup dengan sisa paling sedikit adalah …",o:["Pagar kayu jati","Pagar kayu meranti","Pagar besi","Pagar aluminium"],a:1,e:"Tinggi tangga 240 cm. Panjang miring = √(240² + 320²) = 400 cm = 4 m. Yang cukup: jati, meranti, besi. Sisa paling sedikit pada meranti (0,2 m)."},
+{t:"pg",k:2,q:"Segitiga ABC memiliki titik A(1, 2), B(4, 2), dan C(1, 6). Segitiga tersebut ditranslasikan oleh T = (−3, −4). Koordinat bayangan titik C adalah …",o:["(−2, 2)","(4, 10)","(−2, 10)","(4, 2)"],a:0,e:"C′ = (1 − 3, 6 − 4) = (−2, 2)."},
+{t:"pg",k:2,q:"Sebuah lingkaran berjari-jari 14 cm dibagi menjadi juring A, B, dan C dengan sudut pusat berturut-turut 60°, 90°, dan 30°. Manakah pernyataan yang benar tentang luas juring?",o:["Luas juring B dua kali luas juring C.","Luas juring A dua kali luas juring C.","Luas juring B setengah dari luas juring A.","Luas juring C sepertiga dari luas juring A."],a:1,e:"Luas juring sebanding dengan sudut pusat. A : B : C = 60 : 90 : 30 = 2 : 3 : 1. Jadi A dua kali C."},
+{t:"pg",k:2,q:"Dua persegi panjang sebangun. Persegi panjang yang lebih besar memiliki panjang 20 cm dan luas 240 cm². Persegi panjang yang lebih kecil memiliki panjang 5 cm. Berapakah keliling persegi panjang yang lebih kecil?",o:["16 cm","20 cm","40 cm","64 cm"],a:0,e:"Lebar yang besar = 240 ÷ 20 = 12 cm. Skala 5 : 20 = 1 : 4, sehingga lebar kecil 3 cm. Keliling = 2(5 + 3) = 16 cm."},
+{t:"pk",k:2,r:"r3",q:"Tandon B penuh. Sebanyak 90 galon berukuran 20 liter sudah diisi dari tandon tersebut. Sisa air dikemas ke dalam ember berukuran 25 liter. Pilihlah semua pernyataan yang benar.",o:["Banyak galon lebih banyak daripada banyak ember.","Total galon dan ember yang terisi adalah 114.","Setelah semua ember terisi, masih ada sisa air di tandon.","Banyak ember yang terisi adalah 30."],a:[0,1],e:"Tandon B = 2 × 1,2 × 1 = 2,4 m³ = 2.400 liter. Galon 90 × 20 = 1.800 liter. Sisa 600 liter = 24 ember (tidak ada sisa). Total 90 + 24 = 114."},
+{t:"kat",k:2,r:"r3",c:["Mungkin","Tidak mungkin"],q:"Pak Rudi menjual seluruh air dari kedua tandon (hingga kosong) kepada dua pelanggan: Bu Wati dengan jeriken 30 liter dan Pak Ujang dengan jeriken 40 liter. Semua jeriken terisi penuh dan keduanya mendapat air dari kedua tandon. Tentukan mungkin atau tidak mungkin.",s:["Bu Wati membawa 20 jeriken air Tandon A dan 50 jeriken air Tandon B.","Pak Ujang membawa 12 jeriken air Tandon A dan 30 jeriken air Tandon B.","Bu Wati membawa 24 jeriken air Tandon A dan Pak Ujang 12 jeriken air Tandon A."],a:[false,true,true],e:"Tandon A 1.200 liter, Tandon B 2.400 liter. (1) Sisa B = 900 liter, 900 ÷ 40 = 22,5 (tidak bulat). (2) Sisa A = 720 ÷ 30 = 24 dan sisa B = 1.200 ÷ 30 = 40, mungkin. (3) 720 + 480 = 1.200 liter, mungkin."},
+{t:"pg",k:3,q:"Jumlah pengunjung perpustakaan Senin sampai Jumat: <table class='tb'><tr><th>Hari</th><th>Sn</th><th>Sl</th><th>Rb</th><th>Km</th><th>Jm</th></tr><tr><td>Pengunjung</td><td>40</td><td>55</td><td>35</td><td>60</td><td>45</td></tr></table>Diagram garis manakah yang menyajikan data tersebut?",o:[PL([45,60,35,55,40]),PL([40,55,35,60,45]),PL([40,35,55,60,45]),PL([55,40,35,60,45])],a:1,e:"Titik-titik harus berurutan: 40, 55, 35, 60, 45 dari Senin sampai Jumat."},
+{t:"pg",k:3,q:"Diagram batang berikut menunjukkan lama belajar Dito (jam) selama 10 hari.<div style='margin:8px 0'>"+BC([2,3,2,4,3,2,5,3,2,4])+"</div>Dalam 10 hari tersebut, Dito paling sering belajar selama …",o:["2 jam","3 jam","4 jam","5 jam"],a:0,e:"Modus adalah nilai yang paling sering muncul. 2 jam muncul 4 kali, 3 jam 3 kali, 4 jam 2 kali, 5 jam 1 kali."},
+{t:"pk",k:3,q:"Seorang anak diminta mengurangi waktu menatap layar hingga batas maksimal 7 jam per minggu. Selama 12 minggu waktu layar (jam) dicatat:<table class='tb'><tr><th>Minggu</th><th>Data (jam)</th></tr><tr><td>1 sampai 4</td><td>20, 18, 22, 16</td></tr><tr><td>5 sampai 8</td><td>14, 16, 12, 14</td></tr><tr><td>9 sampai 12</td><td>10, 9, 11, 10</td></tr></table>Fase pertama membandingkan rata-rata minggu 1–4 dengan minggu 5–8. Fase kedua membandingkan rata-rata minggu 5–8 dengan minggu 9–12. Fase akhir membandingkan rata-rata minggu 9–12 dengan batas 7 jam. Pilihlah semua pernyataan yang benar.",o:["Fase pertama berkurang 5 jam.","Fase kedua berkurang 5 jam.","Fase akhir berkurang 3 jam.","Seluruh fase berkurang 12 jam."],a:[0,2,3],e:"Rata-rata: 19, 14, dan 10. Fase pertama 19 − 14 = 5. Fase kedua 14 − 10 = 4. Fase akhir 10 − 7 = 3. Seluruhnya 19 − 7 = 12."},
+{t:"pg",k:3,q:"Sebuah toples berisi 24 permen, terdiri atas 10 permen cokelat dan 14 permen stroberi. Dina mengambil 4 permen secara acak tanpa pengembalian dan mendapat 3 cokelat dan 1 stroberi. Kemudian Edo mengambil 1 permen. Berapakah peluang Edo mendapatkan permen cokelat?",o:["7/20","7/24","10/20","10/24"],a:0,e:"Setelah Dina mengambil, sisa 20 permen dengan 10 − 3 = 7 cokelat. Peluangnya 7/20."},
+{t:"pg",k:3,q:"Bibit cabai disemai dan siap dipindah setelah 12 hari sejak disemai. Berikut usia bibit saat ini:<table class='tb'><tr><th>Usia bibit</th><th>Banyak bibit</th></tr><tr><td>3 hari</td><td>12</td></tr><tr><td>5 hari</td><td>18</td></tr><tr><td>7 hari</td><td>20</td></tr><tr><td>9 hari</td><td>10</td></tr></table>Satu bibit dipilih secara acak. Berapakah peluang bibit tersebut siap dipindah dalam 4 hari ke depan?",o:["1/6","1/5","1/3","1/2"],a:0,e:"Siap dalam 4 hari berarti usia sekarang minimal 8 hari, yaitu bibit usia 9 hari sebanyak 10. Total 60. Peluang = 10/60 = 1/6."},
+{t:"pk",k:3,q:"Sebuah kotak berisi kartu berwarna merah, kuning, dan hijau. Mula-mula ada 8 kartu merah dan kartu merah lebih sedikit daripada kartu kuning. Diambil 4 kartu yang berwarna sama. Setelah itu tersisa 26 kartu, kartu kuning lebih banyak daripada kartu hijau, dan peluang terambil kartu hijau jika diambil satu kartu acak adalah 3/13. Berapakah kemungkinan banyak kartu kuning mula-mula? Pilihlah semua jawaban benar.",o:["10 kartu","12 kartu","14 kartu","16 kartu"],a:[1,3],e:"Hijau sisa = 3/13 × 26 = 6, sehingga merah + kuning sisa = 20. Jika yang diambil merah: merah 4, kuning 16 (kuning awal 16). Jika yang diambil kuning: merah 8, kuning sisa 12 (awal 16). Jika yang diambil hijau: merah 8, kuning 12 (awal 12). Jadi 12 atau 16."}
+];
+var N=Q.length,A,F,cur,left,iv,nama,DUR=75*60,L="ABCD";
+var $=function(i){return document.getElementById(i)};
+function done(i){var a=A[i];return Q[i].t=="pg"?a!==null:Q[i].t=="pk"?a.length>0:a.every(function(x){return x!==null})}
+function start(){
+ nama=$("nm").value.trim();if(!nama){$("nm").focus();$("er").textContent="Isi nama peserta terlebih dahulu.";return}
+ A=Q.map(function(q){return q.t=="pg"?null:q.t=="pk"?[]:q.s.map(function(){return null})});
+ F=Q.map(function(){return false});cur=0;left=DUR;
+ $("tm").classList.remove("hide");tick();iv=setInterval(tick,1000);draw();
+}
+function tick(){
+ var m=Math.floor(left/60),s=left%60;var e=$("tm");e.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+ e.classList.toggle("low",left<=300);
+ if(left<=0){finish();return}left--;
+}
+function home(){
+ $("app").innerHTML='<div class="card"><h1>Simulasi TKA Matematika SMP</h1><p class="mut">Latihan ujian berbasis komputer dengan model soal mengikuti TKA Matematika SMP 2026: bilangan, aljabar, geometri dan pengukuran, serta data dan peluang. Soal dilengkapi bacaan, tabel, gambar, dan grafik. Simulasi latihan ini bukan soal resmi Pusmendik/Kemendikdasmen.</p>'+
+ '<table class="tb"><tr><th>Jumlah soal</th><td>'+N+' soal</td></tr><tr><th>Waktu</th><td>75 menit</td></tr><tr><th>Bentuk soal</th><td>Pilihan ganda sederhana, pilihan ganda kompleks, dan pilihan ganda kompleks kategori (benar/salah)</td></tr></table>'+
+ '<p style="margin-top:18px"><label for="nm"><b>Nama peserta</b></label><input id="nm" type="text" autocomplete="name" placeholder="Tulis nama lengkap"></p><p id="er" class="no" style="margin:4px 0"></p><button class="p" onclick="start()">Mulai ujian</button></div>';
+}
+function draw(){
+ var q=Q[cur],h='';
+ h+='<div class="grid"><div class="card"><div class="meta"><span class="chip">Soal '+(cur+1)+' dari '+N+'</span><span class="chip">'+T[q.k]+'</span></div>';
+ if(q.r)h+='<div class="rd">'+B[q.r]+'</div>';
+ h+='<p class="hint">'+(q.t=="pg"?"Pilih satu jawaban yang benar.":q.t=="pk"?"Pilih lebih dari satu jawaban yang benar.":"Tentukan pilihan yang sesuai untuk setiap pernyataan.")+'</p>';
+ h+='<p class="q">'+q.q+'</p>';
+ if(q.t=="kat"){
+  h+='<table class="k"><tr><th>Pernyataan</th><th class="c">'+(q.c||CB)[0]+'</th><th class="c">'+(q.c||CB)[1]+'</th></tr>';
+  q.s.forEach(function(s,i){h+='<tr><td>'+s+'</td><td class="c"><input type="radio" name="s'+i+'" aria-label="'+(q.c||CB)[0]+'" '+(A[cur][i]===true?"checked":"")+' onchange="setK('+i+',true)"></td><td class="c"><input type="radio" name="s'+i+'" aria-label="'+(q.c||CB)[1]+'" '+(A[cur][i]===false?"checked":"")+' onchange="setK('+i+',false)"></td></tr>'});
+  h+='</table>';
+ }else{
+  q.o.forEach(function(o,i){var on=q.t=="pg"?A[cur]===i:A[cur].indexOf(i)>-1;
+   h+='<label class="opt'+(on?" sel":"")+'"><input type="'+(q.t=="pg"?"radio":"checkbox")+'" name="o" '+(on?"checked":"")+' onchange="setO('+i+')"><b>'+L[i]+'.</b><span>'+o+'</span></label>'});
+ }
+ h+='<div class="bar"><button '+(cur==0?"disabled":"")+' onclick="go(cur-1)">Sebelumnya</button>'+
+ '<label class="flag"><input type="checkbox" '+(F[cur]?"checked":"")+' onchange="F[cur]=this.checked;nav()">Ragu-ragu</label>'+
+ (cur<N-1?'<button class="p" onclick="go(cur+1)">Berikutnya</button>':'<button class="p" onclick="ask()">Selesai</button>')+'</div></div>';
+ h+='<div class="card"><h2>Daftar soal</h2><div class="nav" id="nv"></div><div class="leg"><span><i style="background:var(--ok)"></i>Sudah dijawab</span><span><i style="background:var(--flag)"></i>Ragu-ragu</span><span><i></i>Belum dijawab</span></div><div class="bar"><button class="p" style="width:100%" onclick="ask()">Kumpulkan jawaban</button></div></div></div>';
+ $("app").innerHTML=h;nav();
+}
+function nav(){
+ $("nv").innerHTML=Q.map(function(q,i){return '<button class="'+(F[i]?"f":done(i)?"a":"")+(i==cur?" cur":"")+'" onclick="go('+i+')" aria-label="Soal '+(i+1)+'">'+(i+1)+'</button>'}).join("");
+}
+function go(i){cur=i;draw();window.scrollTo(0,0)}
+function setO(i){var q=Q[cur];if(q.t=="pg")A[cur]=i;else{var p=A[cur].indexOf(i);p>-1?A[cur].splice(p,1):A[cur].push(i)}draw()}
+function setK(i,v){A[cur][i]=v;nav()}
+function ask(){
+ var u=Q.filter(function(q,i){return !done(i)}).length,f=F.filter(Boolean).length;
+ var m=document.createElement("div");m.className="modal";m.id="md";
+ m.innerHTML='<div class="card"><h2>Kumpulkan jawaban?</h2><p>Belum dijawab: <b>'+u+'</b> soal. Ditandai ragu-ragu: <b>'+f+'</b> soal.</p><p class="mut">Setelah dikumpulkan, jawaban tidak dapat diubah.</p><div class="bar"><button onclick="$(\'md\').remove()">Kembali</button><button class="p" onclick="finish()">Ya, kumpulkan</button></div></div>';
+ document.body.appendChild(m);
+}
+function sc(i){var q=Q[i],a=A[i];
+ if(q.t=="pg")return a===q.a?1:0;
+ if(q.t=="pk"){var c=q.a.filter(function(x){return a.indexOf(x)>-1}).length,w=a.length-c;return Math.max(0,(c-w)/q.a.length)}
+ return q.a.filter(function(v,j){return a[j]===v}).length/q.a.length}
+function show(i){var q=Q[i],a=A[i];
+ if(q.t=="pg")return a===null?"Kosong":L[a];
+ if(q.t=="pk")return a.length?a.slice().sort().map(function(x){return L[x]}).join(", "):"Kosong";
+ return a.map(function(x){return x===null?"–":x?(q.c||CB)[0]:(q.c||CB)[1]}).join(" / ")}
+function key(i){var q=Q[i];
+ if(q.t=="pg")return L[q.a];
+ if(q.t=="pk")return q.a.map(function(x){return L[x]}).join(", ");
+ return q.a.map(function(x){return x?(q.c||CB)[0]:(q.c||CB)[1]}).join(" / ")}
+function finish(){
+ clearInterval(iv);var md=$("md");if(md)md.remove();$("tm").classList.add("hide");
+ var tot=0,per=T.map(function(){return [0,0]});
+ Q.forEach(function(q,i){var s=sc(i);tot+=s;per[q.k][0]+=s;per[q.k][1]++});
+ var nilai=Math.round(tot/N*100);
+ var h='<div class="card"><h1>Hasil ujian</h1><p class="mut">'+nama.replace(/</g,"&lt;")+'</p><div class="score">'+nilai+'</div><p>Skor dari 100. Soal benar penuh: '+Q.filter(function(q,i){return sc(i)==1}).length+' dari '+N+'.</p>'+
+ '<table class="tb"><tr><th>Materi</th><th>Skor</th></tr>'+per.map(function(p,i){return '<tr><td>'+T[i]+'</td><td>'+(Math.round(p[0]*10)/10)+' / '+p[1]+'</td></tr>'}).join("")+'</table>'+
+ '<p style="margin-top:16px"><button class="p" onclick="home()">Ulangi dari awal</button></p></div><div class="card" style="margin-top:16px"><h2>Pembahasan</h2>';
+ Q.forEach(function(q,i){var s=sc(i);
+  h+='<div class="rev"><div class="meta"><span class="chip">Soal '+(i+1)+'</span><span class="chip">'+T[q.k]+'</span><span class="'+(s==1?"ok":"no")+'">'+(s==1?"Benar":s>0?"Benar sebagian":"Salah")+'</span></div>'+(q.r?'<div class="rd">'+B[q.r]+'</div>':'')+'<p class="q" style="font-size:17px">'+q.q+'</p>'+
+  (q.s?'<ul>'+q.s.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>':'<ul style="list-style:none;padding:0">'+q.o.map(function(o,j){return '<li>'+L[j]+'. '+o+'</li>'}).join("")+'</ul>')+
+  '<p>Jawabanmu: <b>'+show(i)+'</b> · Kunci: <b>'+key(i)+'</b></p><div class="exp">'+q.e+'</div></div>'});
+ h+='</div>';$("app").innerHTML=h;window.scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>
